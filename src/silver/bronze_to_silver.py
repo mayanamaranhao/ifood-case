@@ -44,7 +44,7 @@ def rename_to_snake_case(df: DataFrame) -> DataFrame:
 def cast_types(df: DataFrame) -> DataFrame:
     """Aplica a tipagem definitiva de cada coluna."""
     return (
-        df.withColumn("vendor_id", F.col("vendor_id").cast("int"))
+        df.withColumn("VendorID", F.col("VendorID").cast("int"))
         .withColumn("passenger_count", F.col("passenger_count").cast("int"))
         .withColumn("total_amount", F.col("total_amount").cast("double"))
         .withColumn("tpep_pickup_datetime", F.col("tpep_pickup_datetime").cast("timestamp"))
@@ -91,7 +91,7 @@ def deduplicate(df: DataFrame) -> DataFrame:
     """Remove duplicatas exatas (mesma corrida ingerida mais de uma vez,
     ex.: reprocessamento acidental da Bronze)."""
     return df.dropDuplicates(
-        ["vendor_id", "tpep_pickup_datetime", "tpep_dropoff_datetime", "total_amount", "passenger_count"]
+        ["VendorID", "tpep_pickup_datetime", "tpep_dropoff_datetime", "total_amount", "passenger_count"]
     )
 
 
@@ -101,7 +101,6 @@ def transform(bronze_df: DataFrame) -> DataFrame:
     cluster)."""
     return (
         bronze_df.transform(select_required_columns)
-        .transform(rename_to_snake_case)
         .transform(cast_types)
         .transform(add_partition_columns)
         .transform(filter_invalid_records)

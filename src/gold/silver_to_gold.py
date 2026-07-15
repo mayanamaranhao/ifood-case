@@ -55,7 +55,10 @@ def run() -> None:
 
     silver_table = LAKE.silver_table_fqn
     logger.info("Lendo Silver: %s", silver_table)
-    silver_df = spark.table(silver_table).cache()
+    # Sem .cache(): PERSIST TABLE não é suportado em serverless compute na
+    # Free Edition. A Silver é relida uma vez por tabela Gold — aceitável
+    # para o volume de dados do case (5 meses de yellow táxi).
+    silver_df = spark.table(silver_table)
 
     gold_tables = {
         "avg_total_amount_by_month": avg_total_amount_by_month(silver_df),
@@ -67,7 +70,6 @@ def run() -> None:
         logger.info("Escrevendo Gold: %s", table_name)
         write_gold(gold_df, table_name)
 
-    silver_df.unpersist()
     logger.info("Gold concluída: %d tabela(s).", len(gold_tables))
 
 
