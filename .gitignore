@@ -1,0 +1,33 @@
+# Databricks
+.db_internal/
+.databricks/
+.assistant/
+.conversations/
+Drafts/
+
+# Notebook checkpoints
+.ipynb_checkpoints/
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+*.egg-info/
+
+# Virtual Environment
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
+
+# Logs
+*.log
+
+# Credentials
+.env
+*.pem
+*.key

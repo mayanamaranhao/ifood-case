@@ -1,15 +1,157 @@
-# Case Técnico Data Architect — iFood
+# 🚕 Yellow Taxi NYC - Análise de Dados
 
-Solução de ingestão, modelagem e disponibilização dos dados de corridas de Yellow Taxi de NYC (Jan–Mai/2023), usando **arquitetura medalhão** (Bronze / Silver / Gold) em PySpark + Delta Lake + **Genie AI/BI** para democratização de dados.
+## 📋 Sobre o Projeto
 
----
+Este projeto realiza uma análise abrangente dos dados de corridas de táxi amarelo (Yellow Taxi) da cidade de Nova York, focando no período de janeiro a maio de 2023. O objetivo é extrair insights de negócio relevantes através da análise exploratória de dados e visualizações interativas.
+
+## 🎯 Objetivos
+
+* Analisar padrões de uso de táxis amarelos em NYC
+* Identificar tendências temporais (por mês, dia e hora)
+* Entender o comportamento dos passageiros
+* Calcular métricas financeiras e operacionais
+* Fornecer insights acionáveis para tomada de decisão
+
+## 🗂️ Estrutura do Repositório
+
+```
+ifood-case/
+├── README.md                          # Este arquivo
+├── requirements.txt                   # Dependências do projeto
+├── .gitignore                         # Arquivos ignorados pelo Git
+├── src/                               # Código fonte da solução
+│   ├── config.py                      # Configurações gerais
+│   ├── bronze/                        # Transformações Bronze
+│   ├── silver/                        # Transformações Silver
+│   ├── gold/                          # Transformações Gold
+│   └── common/                        # Utilidades comuns
+├── notebooks/                         # Notebooks de ingestão
+│   ├── 00_download_landing.ipynb      # Download dos dados
+│   ├── 00_setup_and_config.ipynb      # Setup e configuração
+│   ├── 01_landing_to_bronze.ipynb     # Ingestão Bronze
+│   ├── 02_bronze_to_silver.ipynb      # Transformação Silver
+│   └── 03_silver_to_gold.ipynb        # Agregações Gold
+└── analysis/                          # Análises e respostas
+    ├── 00_business_questions.ipynb    # Questões de negócio
+    ├── 01_avg_total_amount_by_month.ipynb      # Análise 1: Média mensal
+    ├── 02_avg_passenger_count_by_hour_may.ipynb # Análise 2: Média por hora
+    └── 03_exploratory_analysis.ipynb  # Análise exploratória
+```
+
+## 🚀 Como Utilizar
+
+### Pré-requisitos
+
+* Databricks Workspace (Community Edition ou superior)
+* Dados do NYC Yellow Taxi Trip Records (Jan-Mai 2023)
+* Compute serverless ou cluster Databricks configurado
+
+### Passo 1: Configuração Inicial
+
+1. **Clone ou importe o repositório** no seu Databricks Workspace
+2. **Execute o notebook de setup**:
+   ```
+   notebooks/00_setup_and_config.ipynb
+   ```
+   Este notebook:
+   * Valida o ambiente Databricks
+   * Cria estruturas Unity Catalog (catalog, schema, volume)
+   * Configura paths e variáveis
+
+### Passo 2: Ingestão de Dados
+
+Execute os notebooks de ingestão em ordem:
+
+#### 1. Download (00_download_landing.ipynb)
+* Faz download dos dados do NYC TLC
+* Armazena na Landing Zone (UC Volume)
+* Período: Janeiro a Maio de 2023
+
+#### 2. Bronze (01_landing_to_bronze.ipynb)
+* Lê arquivos parquet da Landing Zone
+* Adiciona metadados de controle
+* Salva em Delta Lake (camada Bronze)
+
+#### 3. Silver (02_bronze_to_silver.ipynb)
+* Limpa e valida dados
+* Padroniza tipos e formatos
+* Remove duplicatas
+* Garante colunas obrigatórias: VendorID, passenger_count, total_amount, tpep_pickup_datetime, tpep_dropoff_datetime
+
+#### 4. Gold (03_silver_to_gold.ipynb)
+* Cria agregações de negócio
+* Tabelas otimizadas para análise
+* Métricas por mês, hora, zona
+
+### Passo 3: Análises
+
+Execute os notebooks em `analysis/` para responder às questões de negócio:
+
+#### 1. Business Questions (00_business_questions.ipynb)
+* Define as principais questões de negócio
+* Estabelece métricas e KPIs
+
+#### 2. Média de Valor por Mês (01_avg_total_amount_by_month.ipynb)
+**Pergunta:** Qual a média de valor total (total_amount) recebido em um mês considerando todos os yellow táxis da frota?
+
+#### 3. Média de Passageiros por Hora em Maio (02_avg_passenger_count_by_hour_may.ipynb)
+**Pergunta:** Qual a média de passageiros (passenger_count) por cada hora do dia que pegaram táxi no mês de maio?
+
+#### 4. Análise Exploratória Completa (03_exploratory_analysis.ipynb)
+* Análise detalhada de todas as variáveis
+* Visualizações e gráficos interativos
+* Correlações e insights estatísticos
+
+## 📊 Principais Análises
+
+### Métricas Calculadas
+
+* **Valor médio por corrida** (total_amount)
+* **Número médio de passageiros** por corrida e por período
+* **Distância média** das viagens
+* **Gorjetas médias** e taxa de gorjeta
+* **Distribuição temporal** das corridas
+
+### Dimensões de Análise
+
+* **Temporal**: Mês, dia da semana, hora do dia
+* **Geográfica**: Zonas de pickup e dropoff
+* **Financeira**: Valores, gorjetas, taxas
+* **Operacional**: Número de passageiros, distância, duração
+
+## 🛠️ Tecnologias Utilizadas
+
+* **Databricks**: Plataforma de análise de dados
+* **Apache Spark / PySpark**: Processamento distribuído
+* **Delta Lake**: Armazenamento ACID transacional
+* **Unity Catalog**: Governança de dados
+* **Python**: Análise e transformações
+* **SQL**: Queries analíticas
+
+## 📦 Dependências
+
+As dependências estão listadas em `requirements.txt`. O Databricks Runtime já inclui a maioria das bibliotecas necessárias:
+
+* PySpark >= 3.4.0
+* Delta Spark >= 2.4.0
+* Pandas >= 1.5.0
+
+## 🔍 Fonte dos Dados
+
+Os dados são do **NYC Taxi and Limousine Commission (TLC)**, disponíveis publicamente em:
+* Dataset: Yellow Taxi Trip Records
+* URL: https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page
+* Período: Janeiro a Maio de 2023
+* Formato: Parquet
 
 ## 🏗️ Arquitetura
 
+O projeto segue a **arquitetura medalhão** (Bronze/Silver/Gold):
+
 ```
-NYC TLC (parquet) 
+NYC TLC (parquet)
     ↓
-Landing Zone (UC Volume) 
+Landing Zone (UC Volume)
     ↓
 Bronze (dados brutos + metadados)
     ↓
@@ -17,263 +159,61 @@ Silver (dados limpos, tipados, deduplicados)
     ↓
 Gold (agregações de negócio)
     ↓
-🤖 Genie Space (perguntas em linguagem natural)
+Análises e Dashboards
 ```
 
-### Camadas da Arquitetura Medalhão
+## 📈 Resultados Esperados
 
-| Camada | Conteúdo | Formato | Localização | Propósito |
-|--------|----------|---------|-------------|-----------|
-| **Landing** | Arquivos originais intocados | Parquet | UC Volume: \`/Volumes/workspace/default/ifood_case/landing/yellow_taxi\` | Reprocessamento sem depender da fonte |
-| **Bronze** | Raw + metadados técnicos | Delta | \`workspace.bronze.yellow_taxi_trips\` | Histórico bruto, schema-on-read |
-| **Silver** | Tipado, limpo, deduplicado | Delta | \`workspace.silver.yellow_taxi_trips\` | Fonte única de verdade |
-| **Gold** | Agregados de negócio | Delta | \`workspace.gold.*\` | Respostas prontas para consumo |
-| **🤖 Genie** | Interface de perguntas | AI/BI | Genie Space | Self-service analytics |
+Ao final das análises, você terá:
+
+✅ Pipeline de ingestão completo e automatizado  
+✅ Dados organizados em camadas (Bronze/Silver/Gold)  
+✅ Respostas para as questões de negócio  
+✅ Compreensão profunda dos padrões de uso de táxis em NYC  
+✅ Identificação de horários e períodos de maior demanda  
+✅ Insights sobre comportamento de passageiros e pagamentos  
+
+## 🤝 Como Contribuir
+
+1. Crie uma branch para sua feature: `git checkout -b feature/nova-analise`
+2. Commit suas mudanças: `git commit -m 'Adiciona nova análise X'`
+3. Push para a branch: `git push origin feature/nova-analise`
+4. Abra um Pull Request
+
+## 📝 Boas Práticas
+
+* Execute os notebooks em ordem sequencial
+* Valide os dados antes de cada transformação
+* Documente novos insights nos notebooks
+* Mantenha o código limpo e comentado
+* Atualize este README ao adicionar novas análises
+
+## 🐛 Troubleshooting
+
+### Erro: Tabela não encontrada
+* Verifique se os notebooks de ingestão foram executados
+* Confirme o caminho correto dos dados no Unity Catalog
+
+### Erro: Compute não disponível
+* Certifique-se que o serverless compute está habilitado
+* Ou configure um cluster Databricks adequado
+
+### Dados incompletos ou vazios
+* Verifique se o download foi concluído com sucesso
+* Confirme as permissões de acesso aos dados
+* Valide o período de análise configurado
+
+## 📧 Contato
+
+Para dúvidas ou sugestões sobre este projeto, entre em contato através do workspace Databricks.
+
+## 📄 Licença
+
+Este projeto é de uso educacional e analítico.
 
 ---
 
-## 📁 Estrutura do Repositório
-
-A estrutura de código **espelha a arquitetura medalhão** no Unity Catalog:
-
-```
-ifood-case/
-├── src/
-│   ├── bronze/              ↔️  workspace.bronze
-│   │   ├── download_taxi_data.py
-│   │   └── landing_to_bronze.py
-│   │
-│   ├── silver/              ↔️  workspace.silver
-│   │   └── bronze_to_silver.py
-│   │
-│   ├── gold/                ↔️  workspace.gold
-│   │   └── silver_to_gold.py
-│   │
-│   ├── common/
-│   │   ├── spark_session.py
-│   │   ├── schemas.py
-│   │   └── utils.py
-│   │
-│   └── config.py
-│
-├── notebooks/
-│   ├── 00_download_landing.ipynb
-│   ├── 01_landing_to_bronze.ipynb
-│   ├── 02_bronze_to_silver.ipynb
-│   └── 03_silver_to_gold.ipynb
-│
-└── README.md
-```
-
-### Por que Espelhar a Estrutura?
-
-✅ **Navegação intuitiva**: problema no bronze? → \`src/bronze/\`  
-✅ **Escalabilidade**: cada camada cresce independentemente  
-✅ **Clareza**: código reflete visualmente a arquitetura de dados  
-✅ **Manutenibilidade**: alinhamento com melhores práticas de Data Engineering  
-
----
-
-## 🚀 Como Executar
-
-### 1. Setup Inicial
-
-Clone o repositório via **Databricks Repos**:
-- **Repos** → **Add Repo** → cole a URL do GitHub
-- O repo fica em \`/Workspace/Repos/<seu-usuario>/ifood-case\`
-
-### 2. Criar Volume (Landing Zone)
-
-**Catalog** → catalog \`workspace\` → schema \`default\` → **Create Volume**
-- Nome: \`ifood_case\`
-- Confirme que o path bate com \`LAKE.landing_path\` em \`src/config.py\`
-
-### 3. Executar Notebooks na Sequência
-
-Use compute **serverless** (já vem selecionado por padrão):
-
-```python
-# Notebook 00: Download dos arquivos
-from src.bronze import download_taxi_data
-download_taxi_data.run()
-
-# Notebook 01: Landing → Bronze
-from src.bronze import landing_to_bronze
-landing_to_bronze.run()
-
-# Notebook 02: Bronze → Silver
-from src.silver import bronze_to_silver
-bronze_to_silver.run()
-
-# Notebook 03: Silver → Gold
-from src.gold import silver_to_gold
-silver_to_gold.run()
-```
-
-**Nota**: Se \`download_taxi_data.run()\` falhar por restrição de rede, baixe os 5 arquivos manualmente do [NYC TLC](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page) e suba via **Catalog → Volume → Upload**.
-
----
-
-## 🤖 Genie Space — Self-Service Analytics
-
-### O Que É?
-
-Um **Genie Space** é uma interface de perguntas em linguagem natural alimentada por IA que permite que **qualquer pessoa** faça análises sem precisar saber SQL.
-
-### Acesso ao Genie Space
-
-**Nome**: Yellow Taxi - Análise de Corridas  
-**Link**: Acesse via **AI/BI Dashboards** → **Genie Spaces** → **Yellow Taxi - Análise de Corridas**
-
-Ou diretamente pela URL no seu workspace Databricks:
-```
-/genie/rooms/01f180845486195bbde9c492bc4d7531
-```
-
-### Tabelas Conectadas
-
-O Genie Space consulta automaticamente as seguintes tabelas Gold:
-- \`workspace.gold.avg_total_amount_by_month\` — Receita média mensal
-- \`workspace.gold.avg_passenger_count_by_hour_may\` — Passageiros médios por hora em maio
-
-### Como Usar
-
-#### **Opção 1: Clicar nas Starter Questions**
-
-Ao abrir o Genie Space, você verá perguntas sugeridas:
-- "Qual foi o valor médio de corrida em março de 2023?"
-- "Em que horário do dia há mais passageiros em maio?"
-- "Mostre a evolução do valor médio das corridas ao longo dos meses"
-- "Qual foi o mês com maior receita média?"
-- "Compare a média de passageiros entre manhã e noite em maio"
-- "Qual horário tem menos passageiros em maio de 2023?"
-
-#### **Opção 2: Fazer Perguntas Livres**
-
-Digite suas perguntas em linguagem natural:
-```
-"Qual mês teve maior receita?"
-"Mostre um gráfico da receita por mês"
-"Quantos passageiros em média às 8h da manhã em maio?"
-"Compare janeiro e maio"
-"Qual a tendência de receita ao longo dos meses?"
-```
-
-### Recursos do Genie
-
-✅ **Gráficos automáticos** — visualizações inteligentes (linha, barras, área)  
-✅ **Respostas instantâneas** — traduz linguagem natural → SQL automaticamente  
-✅ **Tabelas + gráficos** — resultados em múltiplos formatos  
-✅ **Download de dados** — exportar resultados  
-✅ **Histórico de conversas** — todas as perguntas são salvas  
-
-### Benefícios
-
-🎯 **Democratização de dados**: qualquer pessoa analisa sem SQL  
-🚀 **Self-service analytics**: reduz carga dos analistas de dados  
-📊 **Insights rápidos**: respostas em segundos  
-🔒 **Governança**: Unity Catalog controla acessos automaticamente  
-
----
-
-## 📊 Perguntas de Negócio Respondidas
-
-### 1. Qual a média de \`total_amount\` por mês?
-
-**Tabela Gold**: \`workspace.gold.avg_total_amount_by_month\`
-
-```sql
-SELECT * 
-FROM workspace.gold.avg_total_amount_by_month
-ORDER BY trip_year, trip_month;
-```
-
-**Ou via Genie**: "Mostre a evolução do valor médio das corridas ao longo dos meses"
-
-### 2. Qual a média de \`passenger_count\` por hora do dia em maio?
-
-**Tabela Gold**: \`workspace.gold.avg_passenger_count_by_hour_may\`
-
-```sql
-SELECT * 
-FROM workspace.gold.avg_passenger_count_by_hour_may
-ORDER BY pickup_hour;
-```
-
-**Ou via Genie**: "Em que horário do dia há mais passageiros em maio?"
-
----
-
-## 🎯 Decisões Técnicas
-
-### Por que Arquitetura Medalhão?
-
-- **Bronze imutável**: erros de limpeza na Silver são corrigíveis via reprocessamento
-- **Silver como contrato único**: evita reimplementação de regras de qualidade
-- **Gold pré-agregada**: respostas de negócio como tabelas simples de SELECT
-
-### Por que Delta Lake?
-
-- **ACID transactions**: garantia de consistência
-- **Schema evolution**: \`overwriteSchema\` para evoluções controladas
-- **Time travel**: auditoria e rollback
-- **MERGE/upsert**: suporte nativo para ingestão incremental futura
-
-### Por que Genie Space?
-
-- **Democratização**: usuários de negócio acessam dados sem SQL
-- **Redução de backlog**: analistas focam em problemas complexos
-- **Time-to-insight**: respostas instantâneas vs. dias de fila
-- **Governança**: Unity Catalog gerencia permissões automaticamente
-
-### Qualidade de Dados
-
-Regras aplicadas na camada Silver (\`src/silver/bronze_to_silver.py\`):
-- \`passenger_count > 0\`
-- \`total_amount >= 0\`
-- \`trip_distance >= 0\`
-- \`tpep_dropoff_datetime >= tpep_pickup_datetime\`
-- Deduplicação por (\`VendorID\`, \`tpep_pickup_datetime\`, \`tpep_dropoff_datetime\`)
-
----
-
-## 🔄 Possíveis Evoluções
-
-### Curto Prazo
-- [ ] Adicionar mais agregações Gold (receita por vendor, distância média, etc.)
-- [ ] Criar dashboards Lakeview conectados às tabelas Gold
-- [ ] Implementar testes unitários (pytest) para transformações
-
-### Médio Prazo
-- [ ] Ingestão incremental via Auto Loader (substitui \`overwrite\` por \`append\`)
-- [ ] Orquestração via Databricks Workflows com retries e alertas
-- [ ] Testes de qualidade automatizados (Great Expectations)
-
-### Longo Prazo
-- [ ] Data Quality checks como Delta constraints
-- [ ] Linhagem completa via Unity Catalog
-- [ ] Extender para outros datasets (green taxi, for-hire vehicles)
-
----
-
-## 📚 Referências
-
-- [NYC TLC Trip Record Data](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page)
-- [Databricks Medallion Architecture](https://www.databricks.com/glossary/medallion-architecture)
-- [Unity Catalog](https://docs.databricks.com/data-governance/unity-catalog/index.html)
-- [Delta Lake](https://delta.io/)
-- [Databricks Genie Spaces](https://docs.databricks.com/genie/index.html)
-
----
-
-## 📝 Licença
-
-MIT License — veja arquivo \`LICENSE\` para detalhes.
-
----
-
-## 👤 Autor
-
-Projeto desenvolvido como case técnico para vaga de Data Architect no iFood.
-
-**Stack**: PySpark • Delta Lake • Unity Catalog • Databricks • Genie AI/BI
+**Case Técnico:** Data Architect - iFood  
+**Última atualização:** 2024  
+**Versão:** 1.0.0  
+**Status:** ✅ Ativo
