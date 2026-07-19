@@ -269,10 +269,12 @@ pandas>=1.5.0
 
 ## 📧 Contato
 
-Para dúvidas sobre este case técnico, abra uma issue no repositório ou entre em contato via workspace Databricks.
+Para dúvidas sobre este case técnico:
+- **E-mail**: mayanamdf@gmail.com
+- **GitHub**: Abra uma issue no repositório
 
 ---
 
 **Case Técnico Data Architect - iFood**  
-**Última atualização**: 2024  
+**Última atualização**: 19/07/2026  
 **Status**: ✅ Completo
